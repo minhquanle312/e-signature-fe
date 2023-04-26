@@ -8,7 +8,7 @@ import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
 import Title from './Title'
 import useUserApi from '@/api/useUserApi'
-import { Button } from '@mui/material'
+import { Button, Tooltip, Typography } from '@mui/material'
 import useFileApi from '@/api/useFileApi'
 import { toast } from 'react-toastify'
 
@@ -17,7 +17,7 @@ const formatDate = (dateString: string) =>
 
 export default function Orders() {
   const { getCurrentUser } = useUserApi()
-  const { uploadSingleFile } = useFileApi()
+  const { uploadSingleFile, generateFileToken } = useFileApi()
   const [filesData, setFilesData] = useState([])
 
   const fetchUserData = async () => {
@@ -62,9 +62,54 @@ export default function Orders() {
                 </Link>
               </TableCell>
               {/* <TableCell>{row.type}</TableCell> */}
-              <TableCell>token</TableCell>
+              <TableCell sx={{ maxWidth: '200px' }}>
+                {row.signatureToken ? (
+                  <Tooltip title="Click to Copy">
+                    <Typography
+                      sx={{
+                        textOverflow: 'ellipsis',
+                        overflow: 'hidden',
+                        whiteSpace: 'nowrap',
+                        cursor: 'pointer',
+                        // '&:hover': {
+                        //   textOverflow: '',
+                        //   overflow: 'auto',
+                        // },
+                      }}
+                      onClick={() => {
+                        navigator.clipboard.writeText(row.signatureToken)
+                      }}
+                    >
+                      {row.signatureToken}
+                    </Typography>
+                  </Tooltip>
+                ) : (
+                  <Typography sx={{ color: '#ccc' }}>
+                    Have no token yet
+                  </Typography>
+                )}
+              </TableCell>
               <TableCell align="right">
-                <Button>generate token</Button>
+                <Button
+                  onClick={async () => {
+                    try {
+                      await toast.promise(generateFileToken(row.id, row.url), {
+                        pending: 'Generate token',
+                        success: 'Success',
+                        error: {
+                          render({ data }: any) {
+                            return data?.message
+                          },
+                        },
+                      })
+                      fetchUserData()
+                    } catch (error) {
+                      console.log(error)
+                    }
+                  }}
+                >
+                  generate token
+                </Button>
               </TableCell>
             </TableRow>
           ))}

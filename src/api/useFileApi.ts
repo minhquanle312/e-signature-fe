@@ -1,5 +1,5 @@
 // import useAxiosPrivate from '@hooks/useAxiosPrivate'
-import { axiosPrivateUpload, handleAxiosError } from './axios'
+import { axiosPrivateUpload, axiosPrivate, handleAxiosError } from './axios'
 
 const useFileApi = () => {
   // const axiosPrivate = useAxiosPrivate()
@@ -14,7 +14,20 @@ const useFileApi = () => {
     }
   }
 
-  return { uploadSingleFile }
+  const generateFileToken = async (fileId: string, url: string) => {
+    try {
+      const res = await axiosPrivate.patch(
+        `/uploads/generateToken/${fileId}`,
+        JSON.stringify({ url })
+      )
+
+      return res.data
+    } catch (error) {
+      handleAxiosError(error)
+    }
+  }
+
+  return { uploadSingleFile, generateFileToken }
 }
 
 export default useFileApi
