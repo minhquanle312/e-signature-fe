@@ -12,7 +12,7 @@ const VerifyEmail = () => {
     if (emailToken) {
       try {
         await verifyEmail(emailToken)
-        navigate('/chat', { replace: true })
+        navigate('/dashboard', { replace: true })
       } catch (error) {
         console.log(error)
       }

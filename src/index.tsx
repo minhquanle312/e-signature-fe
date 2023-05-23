@@ -8,12 +8,11 @@ import {
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 // import { Provider } from 'react-redux'
-import { RouterProvider, createBrowserRouter } from 'react-router-dom'
 import {
   ThemeProvider as MuiThemeProvider,
   createTheme,
-  styled,
 } from '@mui/material/styles'
+import { RouterProvider, createBrowserRouter } from 'react-router-dom'
 import { ThemeProvider } from './context/ThemeContext'
 // import './styles/_index.scss'
 import { AuthProvider } from '@context/AuthContext'
@@ -24,6 +23,9 @@ import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import App from './App'
 import './index.css'
+import DashboardPage from './pages/Dashboard/DashboardPage'
+import TokenPage from './pages/Token/TokenPage'
+import VerifyPage from './pages/Verify/VerifyPage'
 // import { store } from './store/store'
 
 const queryClient = new QueryClient()
@@ -42,6 +44,11 @@ const router = createBrowserRouter([
       {
         path: 'dashboard',
         element: <ProtectedLayout />,
+        children: [
+          { path: '', element: <DashboardPage /> },
+          { path: 'token-management', element: <TokenPage /> },
+          { path: 'verify', element: <VerifyPage /> },
+        ],
       },
     ],
   },

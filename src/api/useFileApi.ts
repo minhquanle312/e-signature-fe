@@ -14,11 +14,11 @@ const useFileApi = () => {
     }
   }
 
-  const generateFileToken = async (fileId: string, url: string) => {
+  const updateFilePki = async (fileId: string, pkiId: string) => {
     try {
       const res = await axiosPrivate.patch(
-        `/uploads/generateToken/${fileId}`,
-        JSON.stringify({ url })
+        `/uploads/${fileId}`,
+        JSON.stringify({ pkiId })
       )
 
       return res.data
@@ -27,7 +27,38 @@ const useFileApi = () => {
     }
   }
 
-  return { uploadSingleFile, generateFileToken }
+  const updateFileSignature = async (
+    fileId: string,
+    signatureToken: string
+  ) => {
+    try {
+      const res = await axiosPrivate.patch(
+        `/uploads/${fileId}`,
+        JSON.stringify({ signatureToken })
+      )
+
+      return res.data
+    } catch (error) {
+      handleAxiosError(error)
+    }
+  }
+
+  // const generateFileToken = async (fileId: string, url: string) => {
+  //   try {
+  //     const res = await axiosPrivate.patch(
+  //       `/uploads/generateToken/${fileId}`,
+  //       JSON.stringify({ url })
+  //     )
+
+  //     return res.data
+  //   } catch (error) {
+  //     handleAxiosError(error)
+  //   }
+  // }
+
+  // return { uploadSingleFile }
+  return { uploadSingleFile, updateFilePki, updateFileSignature }
+  // return { uploadSingleFile, generateFileToken, updateFilePki }
 }
 
 export default useFileApi
